@@ -121,42 +121,117 @@
           <form class="mt-6">
             <!-- Colors -->
             <div>
-              <h3 class="text-sm text-gray-600">Color</h3>
+              <h3 class="text-sm text-gray-600">Variant</h3>
 
-              <RadioGroup v-model="selectedColor" class="mt-2">
-                <RadioGroupLabel class="sr-only">
-                  Choose a color
-                </RadioGroupLabel>
-                <span class="flex items-center space-x-3">
-                  <RadioGroupOption
-                    as="template"
-                    v-for="color in product.colors"
-                    :key="color.name"
-                    :value="color"
-                    v-slot="{ active, checked }"
+              <Listbox v-model="selectedPerson">
+                <div class="relative mt-1">
+                  <ListboxButton
+                    class="
+                      relative
+                      w-full
+                      cursor-default
+                      rounded-lg
+                      bg-white
+                      py-2
+                      pl-3
+                      pr-10
+                      text-left
+                      shadow-md
+                      focus:outline-none
+                      focus-visible:border-indigo-500
+                      focus-visible:ring-2
+                      focus-visible:ring-white
+                      focus-visible:ring-opacity-75
+                      focus-visible:ring-offset-2
+                      focus-visible:ring-offset-orange-300
+                      sm:text-sm
+                    "
                   >
-                    <div
-                      :class="[
-                        color.selectedColor,
-                        active && checked ? 'ring ring-offset-1' : '',
-                        !active && checked ? 'ring-2' : '',
-                        '-m-0.5 relative p-0.5 rounded-full flex items-center justify-center cursor-pointer focus:outline-none',
-                      ]"
+                    <span class="block truncate">{{
+                      selectedPerson.name
+                    }}</span>
+                    <span
+                      class="
+                        pointer-events-none
+                        absolute
+                        inset-y-0
+                        right-0
+                        flex
+                        items-center
+                        pr-2
+                      "
                     >
-                      <RadioGroupLabel as="span" class="sr-only">
-                        {{ color.name }}
-                      </RadioGroupLabel>
-                      <span
+                      <ChevronUpDownIcon
+                        class="h-5 w-5 text-gray-400"
                         aria-hidden="true"
-                        :class="[
-                          color.bgColor,
-                          'h-8 w-8 border border-black border-opacity-10 rounded-full',
-                        ]"
                       />
-                    </div>
-                  </RadioGroupOption>
-                </span>
-              </RadioGroup>
+                    </span>
+                  </ListboxButton>
+
+                  <transition
+                    leave-active-class="transition duration-100 ease-in"
+                    leave-from-class="opacity-100"
+                    leave-to-class="opacity-0"
+                  >
+                    <ListboxOptions
+                      class="
+                        absolute
+                        mt-1
+                        max-h-60
+                        w-full
+                        overflow-auto
+                        rounded-md
+                        bg-white
+                        py-1
+                        text-base
+                        shadow-lg
+                        ring-1 ring-black ring-opacity-5
+                        focus:outline-none
+                        sm:text-sm
+                      "
+                    >
+                      <ListboxOption
+                        v-slot="{ active, selected }"
+                        v-for="variants in variant"
+                        :key="variants.name"
+                        :value="variant"
+                        as="template"
+                      >
+                        <li
+                          :class="[
+                            active
+                              ? 'bg-amber-100 text-amber-900'
+                              : 'text-gray-900',
+                            'relative cursor-default select-none py-2 pl-10 pr-4',
+                          ]"
+                        >
+                          <span
+                            :class="[
+                              selected ? 'font-medium' : 'font-normal',
+                              'block truncate',
+                            ]"
+                            >{{ person.name }}</span
+                          >
+                          <span
+                            v-if="selected"
+                            class="
+                              absolute
+                              inset-y-0
+                              left-0
+                              flex
+                              items-center
+                              pl-3
+                              text-amber-600
+                            "
+                          >
+                            <CheckIcon class="h-5 w-5" aria-hidden="true" />
+                          </span>
+                        </li>
+                      </ListboxOption>
+                    </ListboxOptions>
+                  </transition>
+                </div>
+              </Listbox>
             </div>
 
             <div class="sm:flex-col1 mt-10 flex">
@@ -207,82 +282,17 @@
               </button>
             </div>
           </form>
-
-          <!-- <section aria-labelledby="details-heading" class="mt-12">
-            <h2 id="details-heading" class="sr-only">Additional details</h2>
-
-            <div class="divide-y divide-gray-200 border-t">
-              <Disclosure
-                as="div"
-                v-for="detail in product.details"
-                :key="detail.name"
-                v-slot="{ open }"
-              >
-                <h3>
-                  <DisclosureButton
-                    class="
-                      group
-                      relative
-                      flex
-                      w-full
-                      items-center
-                      justify-between
-                      py-6
-                      text-left
-                    "
-                  >
-                    <span
-                      :class="[
-                        open ? 'text-indigo-600' : 'text-gray-900',
-                        'text-sm font-medium',
-                      ]"
-                      >{{ detail.name }}</span
-                    >
-                    <span class="ml-6 flex items-center">
-                      <!-- <PlusIcon
-                        v-if="!open"
-                        class="
-                          block
-                          h-6
-                          w-6
-                          text-gray-400
-                          group-hover:text-gray-500
-                        "
-                        aria-hidden="true"
-                      />
-                      <MinusIcon
-                        v-else
-                        class="
-                          block
-                          h-6
-                          w-6
-                          text-indigo-400
-                          group-hover:text-indigo-500
-                        "
-                        aria-hidden="true"
-                      />
-                    </span>
-                  </DisclosureButton>
-                </h3>
-                <DisclosurePanel as="div" class="prose prose-sm pb-6">
-                  <ul role="list">
-                    <li v-for="item in detail.items" :key="item">{{ item }}</li>
-                  </ul>
-                </DisclosurePanel>
-              </Disclosure>
-            </div>
-          </section> -->
         </div>
         <section
           aria-labelledby="summary-heading"
           class="
-            mt-16
             rounded-lg
             bg-gray-50
             px-4
             py-6
             sm:p-6
-            lg:col-span-5 lg:mt-0 lg:p-8
+            lg:col-span-5 lg:mt-10 lg:p-8
+            order
           "
         >
           <h2 id="summary-heading" class="text-lg font-medium text-gray-900">
@@ -392,18 +402,18 @@ import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
-  RadioGroup,
-  RadioGroupLabel,
-  RadioGroupOption,
+  Listbox,
+  ListboxLabel,
+  ListboxButton,
+  ListboxOptions,
+  ListboxOption,
   Tab,
   TabGroup,
   TabList,
   TabPanel,
   TabPanels,
 } from "@headlessui/vue";
-
-// import { StarIcon } from "@vue-hero-icons/solid";
-// import { HeartIcon, MinusIcon, PlusIcon } from "@vue-hero-icons/outline";
+// import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 
 const product = {
   name: "Assembling Building Block Sport Car",
@@ -431,44 +441,33 @@ const product = {
     },
     // More images...
   ],
-  colors: [
-    {
-      name: "Washed Black",
-      bgColor: "bg-gray-700",
-      selectedColor: "ring-gray-700",
-    },
-    { name: "White", bgColor: "bg-white", selectedColor: "ring-gray-400" },
-    {
-      name: "Washed Gray",
-      bgColor: "bg-gray-500",
-      selectedColor: "ring-gray-500",
-    },
-  ],
   notes: `
     <p>Catatan: Minimum pemesanan yang tertera ditentukan oleh supplier dan tidak menjamin sudah memenuhi minimum pengiriman China - Indonesia (0.3 CBM/ 3 KG).</p>
   `,
-  // details: [
-  //   {
-  //     name: "Features",
-  //     items: [
-  //       "Multiple strap configurations",
-  //       "Spacious interior with top zip",
-  //       "Leather handle and tabs",
-  //       "Interior dividers",
-  //       "Stainless strap loops",
-  //       "Double stitched construction",
-  //       "Water-resistant",
-  //     ],
-  //   },
-  //   // More sections...
-  // ],
 };
-
-const selectedColor = ref(product.colors[0]);
+const variant = [
+  {
+    name: "8600 Lambo Green Bull [1254 Particles] Static Edition",
+  },
+  {
+    name: "8600 Rambo Green Bull [1254 Particles] Light Static Edition",
+  },
+  {
+    name: "8600 Lambo Green Bull [1254 Particles] Remote Control Edition",
+  },
+  {
+    name: "8604 Bugatti [1355 particles] static version",
+  },
+  {
+    name: "8604 Bugatti [1355 Particles] Light Static Edition",
+  },
+];
+const selectedPerson = ref(variant[0]);
 </script>
 
 <style lang="css" scoped>
-.bc {
+.bc,
+.order {
   margin-left: 150px;
   margin-top: 50px;
 }
